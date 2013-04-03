@@ -1,0 +1,25 @@
+// Example menu for MLPV2.1, including a pose with a prop
+
+MENU Example... | ALL | BLUE | PINK
+POSE standing | stand | stand
+POSE pillow-sit | sit_ground | sit_ground
+POSE sit2 | sit_ground::21 | sit_ground
+SOUND ☊guitar | mood4aday
+SWAP
+STOP
+BACK
+
+// example menu containing 2 sequences, and sequence controls
+MENU Tours...
+LINKMSG *Tour* | 0,-4,-12001,SEQUENCE Tour1
+LINKMSG *Tour2* | 0,-4,-12001,SEQUENCE tour2
+LINKMSG PAUSE | 0,-4,-12001,PAUSE
+LINKMSG RESUME | 0,-4,-12001,RESUME
+LINKMSG NARRATION | 0,-4,-12001,NARRATION
+SWAP
+STOP
+BACK
+
+MENU MyPoses | HIDDEN | BLUE | PINK
+POSE hidden1 | jP-sit-m-01-filt | jP-sit-f-05-filt
+POSE hidden2 | jP-sit-m-02-filt | jP-sit-f-04-filt
