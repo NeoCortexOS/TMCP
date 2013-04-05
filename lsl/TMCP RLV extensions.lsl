@@ -1,9 +1,9 @@
 //Changes by Tano Toll for seamless MLCP compatability, and to dodge 'double locking':
- 
+
 //*sit and unsit events do not trigger an RLV command (master script already does this)
 //*identifier is changed to object name, url encoded.
 //*delayed but automatic notecard read on inventory change
- 
+
 // ----------------------------------------------------------------------------------
 // MLPV2 Plugin for RLV Script V1.02
 //
@@ -58,25 +58,25 @@ integer RELAY_CHANNEL   = -1812221819; // channel for RLV relay
 float TIMER_SEC         = 1800.0; // 30 min.
 string CMD_RELEASE      = "!release";  // release command
 integer LM_NUMBER       = -1819;  // number for link message
- 
+
 // internal use
 key kQuery;
 integer iLine;
- 
+
 string pose = "stand"; // pose set by the Ball Menu
 list poses    = [];    // configured poses
 list balls    = [];    // configured balls
 list commands = [];    // configured commands
 list avatars  = [];    // avatars sitting on balls
- 
+
 integer wants_init;
- 
+
 // log a message
 log(string message)
 {
     if(DEBUG) llOwnerSay(message);
 }
- 
+
 // only for testing purposes
 log_data()
 {
@@ -88,7 +88,7 @@ log_data()
         log("- " + llList2String(poses, i) + ": (" + llList2String(balls, i) + ") "+ llList2String(commands, i));
     }
 }
- 
+
 // write a message to the RLV Relay
 relay(key avatar, string message)
 {
@@ -102,13 +102,13 @@ relay(key avatar, string message)
         llSay(RELAY_CHANNEL, llEscapeURL(llGetObjectName())+"," + (string) avatar + "," + token);
     }
 }
- 
+
 // find commands for pose and play it for avatars on ball
 rlv(string pose)
 {
     log("command for: " + pose);
     llSetTimerEvent(TIMER_SEC);
- 
+
     integer total_number = llGetListLength(poses);
     integer i;
     for(i=0; i<total_number; i++)
@@ -135,7 +135,7 @@ rlv(string pose)
         }
     }
 }
- 
+
 // new find: pose and ball needs to match
 integer find_pose(string pose, string ball)
 {
@@ -150,7 +150,7 @@ integer find_pose(string pose, string ball)
     }
     return -1;
 }
- 
+
 // add a pose/ball/command entry
 add_pose(string pose, string ball, string command)
 {
@@ -162,7 +162,7 @@ add_pose(string pose, string ball, string command)
         poses += [pose];
         balls += [ball];
         commands += [command];
- 
+
         log("Added from " + NOTECARD + ": " + pose + " | " + ball + " | " + command);
     }
     else
@@ -170,20 +170,20 @@ add_pose(string pose, string ball, string command)
         // append to existing pose
         string c = llList2String(commands, found) + "|" + command;
         commands = llListReplaceList(commands, [c], found, found);
- 
+
         log("Added " + command + " to pose " + pose);
     }
 }
- 
+
 // parse and store a line
 process_line(string line)
 {
     list tokens = llParseString2List(line, ["  |  ","  | "," |  "," | "," |","| ","|"],[""]);
     if(llGetListLength(tokens) < 3) return;
- 
+
     string pose = llList2String(tokens, 0);
     string ball = llList2String(tokens, 1);
- 
+
     integer total_number = llGetListLength(tokens);
     integer i;
     for(i=2; i<total_number; i++)
@@ -191,12 +191,12 @@ process_line(string line)
         add_pose(pose, ball, llList2String(tokens, i));
     }
 }
- 
+
 // check if object is in the inventory
 integer exists_notecard(string notecard) {
     return llGetInventoryType(notecard) == INVENTORY_NOTECARD;
 }
- 
+
 // initialize me
 initialize()
 {
@@ -205,7 +205,7 @@ initialize()
     balls = [];
     commands = [];
     avatars = [NULL_KEY, NULL_KEY, NULL_KEY, NULL_KEY, NULL_KEY, NULL_KEY];
- 
+
     if (exists_notecard(NOTECARD))
     {
         log("Reading " + NOTECARD + "...");
@@ -217,20 +217,20 @@ initialize()
         llOwnerSay("Not found: " + NOTECARD );
     }
 }
- 
+
 upgrade() {string self = llGetScriptName(); string basename = self; if (llSubStringIndex(self, " ") >= 0) {integer start = 2; string tail = llGetSubString(self, llStringLength(self) - start, -1); while (llGetSubString(tail, 0, 0) != " ") {start++; tail = llGetSubString(self, llStringLength(self) - start, -1);} if ((integer)tail > 0) {basename = llGetSubString(self, 0, -llStringLength(tail) - 1);}} integer n = llGetInventoryNumber(INVENTORY_SCRIPT); while (n-- > 0) {string item = llGetInventoryName(INVENTORY_SCRIPT, n); if (item != self && 0 == llSubStringIndex(item, basename)) {llRemoveInventory(item);}}}
- 
- 
+
+
 default
 {
     // on state entry initialize me
     state_entry()
     {
         upgrade();
- 
+
         initialize();
     }
- 
+
     // reset on Inventory change
     changed(integer change)
     {
@@ -239,7 +239,7 @@ default
             llSetTimerEvent (15.0);
         }
     }
- 
+
     // read a line from notecard
     dataserver(key _query_id, string _data) {
         // were we called to work on notecard?
@@ -254,7 +254,7 @@ default
                     if(_data != "") {
                         process_line(_data);
                     }
- 
+
                 // request next line
                 // read another line when you can
                 iLine++;
@@ -262,28 +262,28 @@ default
             }
         }
     }
- 
+
     timer()
     {
         if (wants_init) {
             wants_init = FALSE;
-              initialize();        
+              initialize();
             llSetTimerEvent (0.0);
-            return;    
+            return;
         }
- 
+
         integer b;
         for (b=0; b<6; b++)
         {
             // get avatar for ball index
             key avatar = llList2Key(avatars, b);
- 
+
             // if not null send command
             if(avatar != NULL_KEY) relay(avatar, CMD_RELEASE);
         }
         llSetTimerEvent(0.0);
     }
- 
+
     // link message from MLPV2
     link_message(integer sender_number, integer number, string message, key id)
     {
@@ -295,7 +295,7 @@ default
             return;
         }
         */
- 
+
         // direct call from ball menu
         // configure in .MENUITEMS with
         // LINKMSG Resctriction | 0,-1,-1819,Restriction
@@ -305,7 +305,7 @@ default
             rlv(pose);
             return;
         }
- 
+
         // unsit avatar
         if (number == -11001)
         {
@@ -314,7 +314,7 @@ default
             //relay(llList2Key(avatars, ball), CMD_RELEASE);
             avatars = llListReplaceList(avatars, [NULL_KEY], ball, ball);
         }
- 
+
         // sit avatar
         if (number == -11000)
         {

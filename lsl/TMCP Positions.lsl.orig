@@ -1,4 +1,13 @@
 //basically, we need a large datastore for our command set
+<<<<<<< HEAD
+list poseNames;
+list poseData;
+
+list positionNames;
+list positionData;
+
+=======
+>>>>>>> release/0.3x
 
 integer MSG_DATA_MENU=310;
 integer MSG_DATA_TYPE=320;
@@ -33,6 +42,9 @@ integer MSG_MLP_SETTING = 1;
 integer MSG_ADJUST_POSROT=520;
 integer MSG_TEMPORARY_POSROT=521;
 
+<<<<<<< HEAD
+
+=======
 list poseNames;
 list poseData;
 
@@ -42,6 +54,7 @@ list positionData;
 list props;
 string currentProp;
 integer propChannel;
+>>>>>>> release/0.3x
 
 string currentPose="default";
 list currentAnims;
@@ -137,6 +150,8 @@ dumpPos() {
     }
 }
 
+<<<<<<< HEAD
+=======
 checkProps(string pose) {
     integer i=llListFindList(props, ["^^^"+llToLower(pose)]);
     string prop;
@@ -160,6 +175,7 @@ checkProps(string pose) {
     }
 }
 
+>>>>>>> release/0.3x
 doPose (string m) {
     checkProps(m);
     if (m!=currentPose)
@@ -229,7 +245,11 @@ adjustPosition (string name, integer index, vector p, vector r) {
                 vector R0=(vector)llList2String(pos, j+1);
                 rotation R1=llEuler2Rot(DEG_TO_RAD *R0);
                 rotation Rd=llEuler2Rot(DEG_TO_RAD * r);
+<<<<<<< HEAD
+                R1 = R1 * Rd;
+=======
                 R1 = Rd * R1;
+>>>>>>> release/0.3x
                 R0=RAD_TO_DEG * llRot2Euler(R1);
                 pos=llListReplaceList(pos, [shortVec(v),shortVec(R0)], j, j+1);
             }
@@ -243,7 +263,11 @@ adjustPosition (string name, integer index, vector p, vector r) {
                 vector R0=(vector)llList2String(pos, j+1);
                 rotation R1=llEuler2Rot(DEG_TO_RAD *R0);
                 rotation Rd=llEuler2Rot(DEG_TO_RAD * r);
+<<<<<<< HEAD
+                R1 = R1 * Rd;
+=======
                 R1 = Rd * R1;
+>>>>>>> release/0.3x
                 R0=RAD_TO_DEG * llRot2Euler(R1);
                 pos=llListReplaceList(pos, [shortVec(v),shortVec(R0)], j, j+1);
             }
@@ -304,6 +328,11 @@ adjustPosRot (key id, string data) {
 }
 
 
+<<<<<<< HEAD
+upgrade() {string self = llGetScriptName(); string basename = self; if (llSubStringIndex(self, " ") >= 0) {integer start = 2; string tail = llGetSubString(self, llStringLength(self) - start, -1); while (llGetSubString(tail, 0, 0) != " ") {start++; tail = llGetSubString(self, llStringLength(self) - start, -1);} if ((integer)tail > 0) {basename = llGetSubString(self, 0, -llStringLength(tail) - 1);}} integer n = llGetInventoryNumber(INVENTORY_SCRIPT); while (n-- > 0) {string item = llGetInventoryName(INVENTORY_SCRIPT, n); if (item != self && 0 == llSubStringIndex(item, basename)) {llRemoveInventory(item);}}}
+
+=======
+>>>>>>> release/0.3x
 default
 {
     state_entry()

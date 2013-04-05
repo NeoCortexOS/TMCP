@@ -70,6 +70,8 @@ startNotecard() {
             verbose ("Reading positions from "+notecardname);
             return;
         }
+<<<<<<< HEAD
+=======
         if (llGetSubString(notecardname,0,5)==".PROPS") {
             //neato. go fetch it
             notecardtype=3;
@@ -77,6 +79,7 @@ startNotecard() {
             verbose ("Reading properties from "+notecardname);
             return;
         }
+>>>>>>> release/0.3x
         verbose ("Skipping "+notecardname);
 
     }
@@ -277,7 +280,11 @@ postFixMenu() {
         i=llListFindList(MainMenu, ["-"]);
     }
 
+<<<<<<< HEAD
     if (llGetListLength(MainMenu))
+=======
+    if (MainMenu)
+>>>>>>> release/0.3x
         menuEntries = llListReplaceList(menuEntries, [llList2CSV(MainMenu)], 0, 0);
 }
 
@@ -304,7 +311,11 @@ addPosition(string data) {
     list posrotsraw=llParseString2List(data, [">"], []);
     //llOwnerSay ("raw pos data "+data+" convert to "+(string)posrotsraw);
 
+<<<<<<< HEAD
     list posrots = [];
+=======
+    list posrots;
+>>>>>>> release/0.3x
     integer i;
     for (i=0; i<llGetListLength(posrotsraw); i++) {
         if (-1<llSubStringIndex (llList2String(posrotsraw,i), "<")) {
@@ -317,6 +328,8 @@ addPosition(string data) {
     llMessageLinked (LINK_THIS,MSG_DATA_POSITION, pose, llDumpList2String(posrots,"&"));
 }
 
+<<<<<<< HEAD
+=======
 vector str2vec (string vec) {
     list v=llParseString2List(vec, ["<", ",", " "], []);
     return <(float)llList2String(v,0), (float)llList2String(v,1),(float)llList2String(v,2)>;
@@ -337,6 +350,7 @@ addProp(string data) {
     llMessageLinked (LINK_THIS,MSG_DATA_PROP, pose, llDumpList2String(propdata,"&"));
 }
 
+>>>>>>> release/0.3x
 
 
 upgrade() {string self = llGetScriptName(); string basename = self; if (llSubStringIndex(self, " ") >= 0) {integer start = 2; string tail = llGetSubString(self, llStringLength(self) - start, -1); while (llGetSubString(tail, 0, 0) != " ") {start++; tail = llGetSubString(self, llStringLength(self) - start, -1);} if ((integer)tail > 0) {basename = llGetSubString(self, 0, -llStringLength(tail) - 1);}} integer n = llGetInventoryNumber(INVENTORY_SCRIPT); while (n-- > 0) {string item = llGetInventoryName(INVENTORY_SCRIPT, n); if (item != self && 0 == llSubStringIndex(item, basename)) {llRemoveInventory(item);}}}
