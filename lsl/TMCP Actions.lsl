@@ -13,20 +13,24 @@ integer MSG_DO_SPECIAL=352;
 
 integer MSG_DO_SOUND=356;
 
-integer MSG_SET_RUNNING=390;
-integer MSG_STORAGE_RESET=391;
+integer MSG_SET_RUNNING=340;
+integer MSG_STORAGE_RESET=341;
 integer MSG_DATA_READY=309;
 
 
 
+/*
 upgrade() {string self = llGetScriptName(); string basename = self; if (llSubStringIndex(self, " ") >= 0) {integer start = 2; string tail = llGetSubString(self, llStringLength(self) - start, -1); while (llGetSubString(tail, 0, 0) != " ") {start++; tail = llGetSubString(self, llStringLength(self) - start, -1);} if ((integer)tail > 0) {basename = llGetSubString(self, 0, -llStringLength(tail) - 1);}} integer n = llGetInventoryNumber(INVENTORY_SCRIPT); while (n-- > 0) {string item = llGetInventoryName(INVENTORY_SCRIPT, n); if (item != self && 0 == llSubStringIndex(item, basename)) {llRemoveInventory(item);}}}
+*/
 
 default
 {
+    /*
     state_entry()
     {
         upgrade();
     }
+    */
 
     link_message (integer sn, integer n, string m, key id) {
         if (n==MSG_DATA_LM) {

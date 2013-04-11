@@ -11,8 +11,8 @@ integer MSG_DO_POSE=350;
 integer MSG_DO_LM=351;
 integer MSG_DO_SPECIAL=352;
 
-integer MSG_SET_RUNNING=390;
-integer MSG_STORAGE_RESET=391;
+integer MSG_SET_RUNNING=340;
+integer MSG_STORAGE_RESET=341;
 
 integer MSG_DATA_READY=309;
 
