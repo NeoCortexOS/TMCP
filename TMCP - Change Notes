@@ -1,0 +1,17 @@
+Change Notes
+
+0.50 == 0.39B.
+
+0.39
+Several bug fixes. Several usability fixes. Sit targets are defined in 'normal' rotation, avoiding avi's in incorrect rotations right after sit down, on some builds (was: depending how linked prims were oriented relative to root).
+
+* Solved a conflict in the LM constants ; MSG_STORAGE_RESET now has constant 341 (was: 391 - in conflict !)
+* MSG_RESET was incorrectly set to zero
+
+Sitmanager - various changes:
+* Dodged sitting on greater heights
+* Improved support for sitting on linked prims
+* Small fix to rotation
+
+* Removed all auto-upgrade() functions, freeing up some memory
+

@@ -12,11 +12,11 @@ list sitScripts;
 
 integer MSG_AGENT_UNSIT = 380;
 integer MSG_ALL_UNSIT =381;
+integer MSG_ENABLE_SITTING=386;
 integer MSG_DISABLE_SITTING =382;
 integer MSG_REGISTER_SITSCRIPT =383;
 integer MSG_QUERY_SITSCRIPT = 385;
-integer MSG_RESET =0;
-integer MSG_ENABLE_SITTING=0;
+integer MSG_STORAGE_RESET =341;
 integer MSG_SET_SITTARGET=375;
 integer MSG_PLAY_ANIM=390;
 integer MSG_STOP_ANIM=391;
@@ -134,6 +134,37 @@ integer assignPoseIdx (key id) {
     integer i=llListFindList (agentPoseIdx, [id]);
     if (-1<i)
         return llList2Integer(agentPoseIdx, i+1); //agent already got a pose assigned
+    //see if agent sat on linked prim, and if so, if it gots an idx
+    vector avpos=llList2Vector(llGetObjectDetails(id, [OBJECT_POS]),0)-<0.0,0.0,0.01>;
+    integer j;
+    float dist=100000;
+    list fitidx;
+    for (j=2; j<=llGetNumberOfPrims(); j++) {
+        key id2=llGetLinkKey(j);
+        if (llGetAgentSize(id2));
+        else {
+            vector lpos=llList2Vector(llGetLinkPrimitiveParams(j, [PRIM_POSITION]),0);
+            float d=llVecDist(lpos, avpos);
+            if (d<dist) {
+                //see if description has and index
+                integer idx=(integer)((string)llGetLinkPrimitiveParams(j, [PRIM_DESC]));
+                if (idx) {
+                    dist=d;
+                    fitidx=[idx]+fitidx;
+                }
+            }
+        }
+    }
+    //llOwnerSay (llList2CSV(fitidx));
+    //based on fit, see if it's still free
+    for (i=0; i<llGetListLength(fitidx); i++) {
+        integer idx=llList2Integer(fitidx, i);
+        if (!~llListFindList(agentPoseIdx, [idx])) {
+            agentPoseIdx+=[id, idx];
+            return idx;
+        }
+    }
+    //still not found? assign first available.
     for (i=1; i<100; i++) {
         if (-1==llListFindList(agentPoseIdx, [i])) //found empty one
         {
@@ -190,6 +221,15 @@ setSitTarget() {
         llSitTarget (ZERO_VECTOR, ZERO_ROTATION/llGetRot());
     } else {
         llSitTarget (<0,0,0.01>, ZERO_ROTATION/llGetRot()); //backup option.
+        //fixes sitting at greater heights, and allows targeted sitting:
+        integer i;
+
+
+        for (i=2; i<=llGetNumberOfPrims(); i++) {
+            rotation linkrot=llList2Rot(llGetLinkPrimitiveParams(i, [PRIM_ROTATION]),0);
+            llLinkSitTarget(i, <0.0,0.0,0.01>, ZERO_ROTATION/linkrot);
+        }
+
         llMessageLinked(LINK_THIS, MSG_SET_SITTARGET, (string)idx, "");
     }
 
@@ -506,13 +546,15 @@ handleEvent(integer id, string data) {
 }
 
 
+/*
 upgrade() {string self = llGetScriptName(); string basename = self; if (llSubStringIndex(self, " ") >= 0) {integer start = 2; string tail = llGetSubString(self, llStringLength(self) - start, -1); while (llGetSubString(tail, 0, 0) != " ") {start++; tail = llGetSubString(self, llStringLength(self) - start, -1);} if ((integer)tail > 0) {basename = llGetSubString(self, 0, -llStringLength(tail) - 1);}} integer n = llGetInventoryNumber(INVENTORY_SCRIPT); while (n-- > 0) {string item = llGetInventoryName(INVENTORY_SCRIPT, n); if (item != self && 0 == llSubStringIndex(item, basename)) {llRemoveInventory(item);}}}
+*/
 
 default
 {
     state_entry()
     {
-        upgrade();
+        //upgrade();
         llOwnerSay ("sitmanager memory free : "+(string)llGetFreeMemory());
         state active;
     }
@@ -531,10 +573,11 @@ state active {
     }
     link_message(integer sn, integer n, string m, key id) {
 
-        if (n==MSG_RESET)
+        if (n==MSG_STORAGE_RESET)
             llResetScript();
         else
         if (n==MSG_ENABLE_SITTING) {
+            //note: pose scripts registering themselves will update this.
             MAX_SITTING=llGetListLength(sitScripts);
             setSitTarget();
         }
