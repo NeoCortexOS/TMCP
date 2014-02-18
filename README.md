@@ -6,6 +6,8 @@ TMCP - Tano's MLP Compatible Pose scripts
   - configuration notecard compatible
   - Since august 14. 2012 released under the open source BSD license
 
+  - Neo Cortex 2014/02/18: cloned from ICON Avedons github repository to make it compatible with opensim
+  
 FEATURES
 ========
 
