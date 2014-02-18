@@ -278,7 +278,6 @@ default
 		}
 		else
 			if (n==MSG_DETACH_AGENT) {
-
 				if (ourAgent==id) {
 					llReleaseControls();
 					stopAnim();
