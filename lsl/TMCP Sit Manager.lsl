@@ -105,7 +105,7 @@ assignScript (key id) {
 		if (-1!=llListFindList(agentScripts, [candidate]))
 			candidate="";
 	}
-	if (candidate);else {
+	if (candidate!="");else {
 		//try to find a new one
 		for (i=0; i<llGetListLength(sitScripts); i++) {
 			string ss=llList2String(sitScripts, i);
@@ -116,7 +116,7 @@ assignScript (key id) {
 		}
 		@break;
 	}
-	if (candidate) {
+	if (candidate!="") {
 		agentScripts+=[id, candidate];
 		i=llListFindList (agentScriptCache, [candidate]);
 		if (-1<i)
@@ -141,7 +141,7 @@ integer assignPoseIdx (key id) {
 	list fitidx;
 	for (j=2; j<=llGetNumberOfPrims(); j++) {
 		key id2=llGetLinkKey(j);
-		if (llGetAgentSize(id2));
+		if (llGetAgentSize(id2)!=ZERO_VECTOR);
 		else {
 			vector lpos=llList2Vector(llGetLinkPrimitiveParams(j, [PRIM_POSITION]),0);
 			float d=llVecDist(lpos, avpos);
@@ -261,7 +261,7 @@ inventarise() {
 	//get sitted avatars
 	for (i=0; i<=llGetNumberOfPrims(); i++) {
 		key id=llGetLinkKey(i);
-		if (llGetAgentSize(id)) {
+		if (llGetAgentSize(id)!=ZERO_VECTOR) {
 			//this is an agent..
 			agents+=id;
 			if (-1!=llListFindList(grabbingVictims, [id])) {
@@ -380,7 +380,7 @@ unsitAll() {
 	integer i;
 	for (i=0; i<=llGetNumberOfPrims(); i++) {
 		key id=llGetLinkKey(i);
-		if (llGetAgentSize(id))
+		if (llGetAgentSize(id)!=ZERO_VECTOR)
 			llUnSit(id);
 	}
 }
@@ -665,7 +665,8 @@ state active {
 			integer l = events != [];
 			if (l > 0) {
 				if (l > 3)
-					events = llList2List((events = []) + events, 3, -1);
+					// NC                    events = llList2List((events = []) + events, 3, -1);
+					events = llList2List(events, 3, -1);
 				else events = [];
 			}
 

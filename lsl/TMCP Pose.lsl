@@ -267,6 +267,7 @@ default
 	}
 
 	link_message(integer sn, integer n, string m, key id) {
+		llOwnerSay("sn:" + (string) sn + " n: " + (string) n + " m: " + (string) m + " id: " + (string) id);
 		if (n==MSG_ATTACH_AGENT) {
 			if (m==llGetScriptName()) {
 				if (ourAgent)
@@ -342,7 +343,7 @@ default
 	}
 
 	timer () {
-		llSetTimerEvent (0.);
+		llSetTimerEvent (0.0);
 		//multiplexing this timer
 		//neither use is very time critical - no-one will mind facial reset when fineadjusting
 

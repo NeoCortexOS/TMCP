@@ -164,7 +164,7 @@ integer hasDialogAccess(key id) {
 		for (i=0; i<=llGetNumberOfPrims(); i++) {
 			if (llGetLinkKey(i)==id)
 				return TRUE;
-			if (llGetAgentSize(llGetLinkKey(i)))
+			if (llGetAgentSize(llGetLinkKey(i))!=ZERO_VECTOR)
 				someSit=TRUE;
 		}
 		return (!someSit);
