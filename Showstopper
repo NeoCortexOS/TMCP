@@ -1,0 +1,4 @@
+Seems i have to stop further adaptions until this mantis is fixed:
+http://opensimulator.org/mantis/view.php?id=6121
+The llSetLinkPrimitiveParamsFast is not updating an avatar's position while seated.
+Since this is a vital part of the implementation i will wait until this is part of the official opensim code.
